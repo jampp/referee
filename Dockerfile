@@ -7,7 +7,6 @@ RUN apk add python make bash
 
 COPY package.json yarn.lock lerna.json ./
 
-RUN yarn
 RUN yarn install
 RUN yarn bootstrap
 
