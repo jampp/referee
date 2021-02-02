@@ -1,18 +1,19 @@
-FROM node:10-alpine3.10
+FROM node:10
 
-WORKDIR /opt/referee
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
 
-# Other dependencies
-RUN apk add python make bash
+RUN mkdir -p /app
 
-COPY package.json yarn.lock lerna.json ./
+COPY . /app/referee
+WORKDIR /app/referee
 
-RUN yarn install
-RUN yarn bootstrap
+RUN sed -i '/proxy/d' /app/referee/packages/client/package.json
+RUN yarn install && yarn bootstrap && yarn build
 
-COPY . .
-
-RUN npm rebuild node-sass
-
+ENV PORT 3000
 EXPOSE 3000
-CMD yarn start
+
+CMD ["yarn", "server-start"]
