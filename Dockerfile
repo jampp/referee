@@ -16,4 +16,4 @@ RUN yarn install && yarn bootstrap && yarn build
 ENV PORT 3000
 EXPOSE 3000
 
-CMD ["yarn", "server-start"]
+CMD ["yarn", "server-start", "--host", "kayenta-ui.jampp.com"]
